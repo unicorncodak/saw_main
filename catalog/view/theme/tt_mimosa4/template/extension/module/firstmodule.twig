@@ -1,0 +1,80 @@
+<a href="#modal"></a>
+<div class="remodal" data-remodal-id="modal">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+        <h5 class="panel-title" style="font-family:calibri;color:green">{{ firstmodule_heading }}</h5>
+    </div>
+    <div class="panel-body">
+	   
+		    <div class="btn-yes col-sm-6">
+		    	<button class="btn btn-primary" id="btn-continue">continue</button>
+		    </div>
+		    <div class="btn-no col-sm-6">
+		    	<button class="btn btn-default" id="btn-no-thanks">No, thanks</button>
+		    </div>
+
+      <div class = "form-group" style="display:none">
+          <form id="spouse_form" method="post">
+              <div class="col-sm-12" style="margin-bottom:5px; margin-top:5px">
+                  <input type = "text" name = "firstmodule_spouse_name" placeholder="Enter your spouse name" class = "form-control" required/>
+              </div><br /><br />
+              <div class="col-sm-12" style="margin-bottom:5px">
+                  <input type = "email" name = "firstmodule_email" placeholder="Enter Email" class = "form-control" required/>
+              </div><br />
+              {% if error.email %}
+              <span class="error" style="margin-bottom:5px">{{ error_email }}</span>
+              {% endif %}
+              <br />
+              <div class="col-sm-12" style="margin-bottom:5px">
+                  <input type="text" id="datepicker" class = "form-control" name="firstmodule_spouse_dob" placeholder = "Enter your spouse DOB" required>
+              </div><br><br>
+               <div class="col-sm-12">
+                 <button class="btn btn-primary submit-button" onclick="spouse_subscribe()" style="float:right"><span>{{ entry_button }}</span></button>
+              </div>
+          </form>
+      </div>
+    </div>
+</div>
+</div>
+<script type="text/javascript" src="catalog/view/javascript/remodal.min.js"></script>
+<script>
+$(document).ready(function(){
+	if (!localStorage.getItem('viewed')){
+		setTimeout(function(){
+		  var inst = $('[data-remodal-id=modal]').remodal();
+		  inst.open();
+		}, 15000);
+		localStorage.setItem('viewed','yes');
+	}
+	
+	$( function() {
+		$( "#datepicker" ).datepicker();
+	} );
+});
+</script>
+
+<script type="text/javascript">
+$(document).on('click','#btn-continue',function(){
+	$('#btn-continue').hide();
+	$('#btn-no-thanks').hide();
+	$('.form-group').show();
+
+});
+$(document).on('click','#btn-no-thanks',function(){
+	 var inst = $('[data-remodal-id=modal]').remodal();
+	 inst.close();
+});
+$(document).on('click','.submit-button', function(e){
+  e.preventDefault();
+  $.ajax({
+    type: 'post',
+    url: 'index.php?route=extension/module/firstmodule/index',
+    dataType: 'html',
+    data:$("#spouse_form").serialize(),
+    success: function (data) {
+      $("#spouse_form").hide();
+      $( ".panel-body" ).html('<p>Thank You. You will be reminded of this date in due time.</p>').css('color','green')
+    }});
+});
+
+</script>

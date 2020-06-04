@@ -1,0 +1,24 @@
+***THIS STEPS ARE FOR DEVELOPERS ONLY FOR WHO DON'T WANT TO INSTALL EXTENSION*** 
+
+now i m going to see you how we fix that opencart 3.x seo issue.
+
+step 1 - open your ftp and go to this path catalog/controller/startup
+
+step 2 - open seo_url.php for edit 
+
+step 3 - line no 87 we have to put one more else if
+
+code :
+
+} elseif ($key == 'route') {
+$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "seo_url WHERE `query` = '" . $this->db->escape($value) . "' AND store_id = '" . (int)$this->config->get('config_store_id') . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "'");
+if ($query->num_rows && $query->row['keyword']) {
+$url .= '/' . $query->row['keyword'];
+unset($data[$key]);
+} else if ($data['route'] == "common/home") { 
+$url .= '/'; 
+} 
+
+end code :
+
+step 4 - rename .htaccess.txt to .htaccess
